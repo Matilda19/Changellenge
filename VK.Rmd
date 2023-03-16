@@ -1,0 +1,85 @@
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message = F)
+```
+
+
+```{r warning = F, echo = T, results = 'hide'}
+library(readr)
+library(stringr)
+library(udpipe)
+library(tidytext)
+library(tm)
+library(textstem)
+library(stopwords)
+library(tidyverse)
+library(tidyr)
+```
+
+```{r}
+library(readr)
+data3 <- read_csv("Downloads/data3.csv")
+```
+
+```{r}
+str(data3)
+length(unique(data3$text)) # 87.640 уникальных текстов
+length(unique(data3$coment)) # 440.523 уникальных комментов
+hist(data3$variable)
+```
+
+```{r}
+summary(data3)
+```
+```{r}
+data_words <- data3
+data_words$word <- str_split(data_words$text, " ")
+words_per_line <- lapply(data_words$word, length)
+
+word_lengths <- lapply(data_words$word, str_length)
+avg_word_length <- lapply(word_lengths, mean)
+
+data_words <- mutate(data_words, avg_word_length = unlist(avg_word_length))
+```
+
+
+```{r}
+summary(data_words$avg_word_length) 
+```
+
+
+```{r}
+data_words1 <- data3
+data_words1$word <- str_split(data_words1$coment, " ")
+words_per_line <- lapply(data_words1$word, length)
+
+word_lengths <- lapply(data_words1$word, str_length)
+avg_word_length <- lapply(word_lengths, mean)
+
+data_words1 <- mutate(data_words1, avg_word_length = unlist(avg_word_length))
+```
+
+
+```{r}
+summary(data_words1$avg_word_length) 
+```
+
+```{r}
+class(data3$variable)
+v_0 <- data3 %>% filter(data3$variable == 0) # 88.107
+v_1 <- data3 %>% filter(data3$variable == 1)
+v_2 <- data3 %>% filter(data3$variable == 2)
+v_3 <- data3 %>% filter(data3$variable == 3)
+v_4 <- data3 %>% filter(data3$variable == 4)
+```
+
+```{r}
+data3 %>%
+  group_by(text) %>% 
+  summarize(n = n()) %>% 
+  arrange(-n)
+```
+
+
+
+
